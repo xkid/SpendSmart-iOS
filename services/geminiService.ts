@@ -1,21 +1,14 @@
-import { GoogleGenAI } from "@google/genai";
 import { Transaction } from '../types';
-
-const getClient = () => {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    console.warn("API Key is missing. Gemini features will not work.");
-    return null;
-  }
-  return new GoogleGenAI({ apiKey });
-};
 
 export const generateMonthlyAnalysis = async (
   transactions: Transaction[],
   monthName: string
 ): Promise<string> => {
-  const client = getClient();
-  if (!client) return "API Key not configured.";
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("API Key is missing. Gemini features will not work.");
+    return "API Key not configured.";
+  }
 
   const expenses = transactions.filter(t => t.type === 'expense');
   const income = transactions.filter(t => t.type === 'income');
@@ -47,13 +40,32 @@ export const generateMonthlyAnalysis = async (
   `;
 
   try {
-    const response = await client.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
-    return response.text || "Could not generate analysis.";
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: prompt }]
+          }]
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'API request failed');
+    }
+
+    const data = await response.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    
+    return text || "Could not generate analysis.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "Sorry, I encountered an error analyzing your data. Please try again later.";
+    return "Sorry, I encountered an error analyzing your data. Please check your internet connection or API key.";
   }
 };
