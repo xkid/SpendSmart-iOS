@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, (process as any).cwd(), '');
   return {
     plugins: [react()],
+    base: "/SpendSmart-iOS",
     define: {
       // Polyfill process.env for the Google GenAI SDK and your code usage
       'process.env.API_KEY': JSON.stringify(env.API_KEY),
