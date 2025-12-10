@@ -108,38 +108,36 @@ const App: React.FC = () => {
       <div className="w-full max-w-md bg-gray-50 h-full relative shadow-2xl overflow-hidden flex flex-col">
         
         {/* Top Month Selector (Only visible on Main Views) */}
-        {currentView !== View.ADD && (
-            <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sticky top-0 z-10 pt-safe">
-                {(currentView === View.DASHBOARD || currentView === View.STATS || currentView === View.INSIGHTS || currentView === View.PARENTS || currentView === View.PORTFOLIO) && (
-                    <div className="flex items-center space-x-3 bg-white rounded-full px-3 py-1.5 shadow-sm border border-gray-200 mx-auto">
-                        <button onClick={() => changeMonth(-1)} className="p-1 text-gray-400 hover:text-gray-800 rounded-full hover:bg-gray-100">
-                            <ChevronLeft size={20} />
-                        </button>
-                        
-                        {/* Custom Date Picker Wrapper */}
-                        <div className="relative group">
-                            <div className="flex items-center space-x-2 px-2 py-1 rounded cursor-pointer group-hover:bg-gray-50 transition-colors">
-                                <span className="text-sm font-semibold w-28 text-center select-none truncate">
-                                    {currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                                </span>
-                                <Calendar size={14} className="text-gray-400" />
-                            </div>
-                            <input 
-                                type="month" 
-                                value={monthInputValue}
-                                onChange={handleDateChange}
-                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
-                                aria-label="Select Month"
-                            />
+        <div className="px-4 py-3 bg-gray-50 flex items-center justify-between sticky top-0 z-10 pt-safe">
+            {(currentView === View.DASHBOARD || currentView === View.STATS || currentView === View.INSIGHTS || currentView === View.PARENTS || currentView === View.PORTFOLIO) && (
+                <div className="flex items-center space-x-3 bg-white rounded-full px-3 py-1.5 shadow-sm border border-gray-200 mx-auto">
+                    <button onClick={() => changeMonth(-1)} className="p-1 text-gray-400 hover:text-gray-800 rounded-full hover:bg-gray-100">
+                        <ChevronLeft size={20} />
+                    </button>
+                    
+                    {/* Custom Date Picker Wrapper */}
+                    <div className="relative group">
+                        <div className="flex items-center space-x-2 px-2 py-1 rounded cursor-pointer group-hover:bg-gray-50 transition-colors">
+                            <span className="text-sm font-semibold w-28 text-center select-none truncate">
+                                {currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                            </span>
+                            <Calendar size={14} className="text-gray-400" />
                         </div>
-
-                        <button onClick={() => changeMonth(1)} className="p-1 text-gray-400 hover:text-gray-800 rounded-full hover:bg-gray-100">
-                            <ChevronRight size={20} />
-                        </button>
+                        <input 
+                            type="month" 
+                            value={monthInputValue}
+                            onChange={handleDateChange}
+                            className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                            aria-label="Select Month"
+                        />
                     </div>
-                )}
-            </div>
-        )}
+
+                    <button onClick={() => changeMonth(1)} className="p-1 text-gray-400 hover:text-gray-800 rounded-full hover:bg-gray-100">
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+            )}
+        </div>
 
         <div className="flex-1 overflow-y-auto no-scrollbar scroll-smooth">
             {renderView()}

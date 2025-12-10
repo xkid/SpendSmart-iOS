@@ -32,7 +32,8 @@ const Stats: React.FC<StatsProps> = ({ transactions, currentDate }) => {
   // Data for Stacked Bar Chart (Daily aggregation)
   const chartData = useMemo(() => {
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-    const data = [];
+    // Explicitly type the array to avoid "implicit any" errors
+    const data: { day: number; income: number; expense: number }[] = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
         data.push({ day: i, income: 0, expense: 0 });
